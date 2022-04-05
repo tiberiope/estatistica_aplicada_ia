@@ -4,27 +4,28 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import statsmodels.formula.api as sm
 
+#Python é coisa linda de Deus.
 base = pd.read_csv('CSV/mt_cars.csv')
 print(base.shape)
-
-#mpg consumo, cyl clindros, disp cilindradas, hp
-print(base.head())
 
 #exclui coluna 1
 base = base.drop(['Unnamed: 0'], axis = 1)
 
-#Cálculo da correlação entre x (independente) e y (dependente)
-X = base.iloc[:, 2].values #coluna disp
+#mpg consumo, cyl clindros, disp cilindradas, hp.
+print(base.head())
+
+#Cálculo do coeficiente de correlação (R) entre x (indep) e y (dep).
+x = base.iloc[:, 2].values #coluna disp
 y = base.iloc[:, 0].values #coluna mpg
-correlacao = np.corrcoef(X, y)
+correlacao = np.corrcoef(x, y)
 correlacao
 
 # Mudança do formato de X para o formato de matriz (necessário para versões mais recentes do sklearn)
-X = X.reshape(-1, 1)
+x = x.reshape(-1, 1)
 
 # Criação do modelo, treinamento, visualização dos coeficientes e do score do modelo
 modelo = LinearRegression()
-modelo.fit(X, y)
+modelo.fit(x, y)
 
 #Interceptação
 modelo.intercept_
@@ -33,35 +34,34 @@ modelo.intercept_
 modelo.coef_
 
 #score R^2
-modelo.score(X, y)
+modelo.score(x, y)
 
 # Geração das previsões
-previsoes = modelo.predict(X)
+previsoes = modelo.predict(x)
 previsoes
 
-# Criação do modelo, utilizando a biblioteca statsmodel
-#podemos ver r ajustadodo r2
+# Criação do modelo (biblioteca statsmodel)
 modelo_ajustado = sm.ols(formula = 'mpg ~ disp', data = base)
 modelo_treinado = modelo_ajustado.fit()
-modelo_treinado.summary()
+print(modelo_treinado.summary())
 
 # Visualização dos resultados
-plt.scatter(X, y)
-plt.plot(X, previsoes, color = 'red')
+print(plt.scatter(x, y))
+plt.plot(x, previsoes, color = 'red')
 
 # Previsão para somente um valor
 modelo.predict([[200]])
 
 # Criação de novas variáveis X1 e Y1 e novo modelo para comparação com o anterior
 # 3 variáveis dependentes para prever mpg: cyl	disp	hp
-X1 = base.iloc[:, 1:4].values
-X1
+x1 = base.iloc[:, 1:4].values
+x1
 
 y1 = base.iloc[:, 0].values
 modelo2 = LinearRegression()
-modelo2.fit(X1, y1)
+modelo2.fit(x1, y1)
 #R^2
-modelo2.score(X1, y1)
+modelo2.score(x1, y1)
 
 # Criação do modelo ajustado com mais atributos (regressão linear múltipla)
 #usando stats models
